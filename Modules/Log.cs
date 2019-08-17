@@ -92,10 +92,6 @@ namespace LoLCurrentSong.Modules
                 string filename = String.Format("{0}.log", DateTime.Now.ToString("yyyy-MM-dd"));
                 Directory.CreateDirectory(LogDir);
 
-                var ws = System.IO.File.AppendText(uncatchedFile);
-                ws.WriteLine("File: " + Path.Combine(LogDir, filename));
-                ws.Close();
-
                 StreamWriter sw = File.AppendText(Path.Combine(LogDir, filename));
                 string text = String.Format("[{0}] {1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), msg);
                 sw.WriteLine(text, 0, text.Length);
@@ -104,9 +100,9 @@ namespace LoLCurrentSong.Modules
             catch (Exception err)
             {
                 Console.WriteLine(err);
-                var ws = File.AppendText(uncatchedFile);
-                ws.WriteLine("Error al escribir LOG: " + err.Message);
-                ws.Close();
+                // var ws = File.AppendText(uncatchedFile);
+                // ws.WriteLine("Error al escribir LOG: " + err.Message);
+                // ws.Close();
             }
         }
         public static void Write(int type, string msg)

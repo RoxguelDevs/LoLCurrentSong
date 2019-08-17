@@ -88,10 +88,34 @@ namespace LoLCurrentSong
                             if (FirstTime || InitStatus == null)
                             {
                                 string res = await lcu.StatusMessage();
-                                var json = JObject.Parse(res);
-                                InitStatus = (string)json["statusMessage"];
+                                if (res.Equals(""))
+                                {
+                                    Thread.Sleep(10 * 1000);
+                                }
+                                else
+                                {
+                                    var json = JObject.Parse(res);
+                                    InitStatus = (string)json["statusMessage"];
+                                    Log.Verborse("App", "Initial status: " + InitStatus);
+                                    await UpdateStatus(lcu);
+                                    if (!Aborting)
+                                    {
+                                        Waiting = true;
+                                        FirstTime = false;
+                                        Thread.Sleep(1000);
+                                    }
+                                }
                             }
-                            await UpdateStatus(lcu);
+                            else
+                            {
+                                await UpdateStatus(lcu);
+                                if (!Aborting)
+                                {
+                                    Waiting = true;
+                                    FirstTime = false;
+                                    Thread.Sleep(1000);
+                                }
+                            }
                         }
                         catch (Newtonsoft.Json.JsonReaderException err)
                         {
@@ -100,12 +124,6 @@ namespace LoLCurrentSong
                         catch(Exception err)
                         {
                             Log.Error(err.Message);
-                        }
-                        if (!Aborting)
-                        {
-                            Waiting = true;
-                            FirstTime = false;
-                            Thread.Sleep(1000);
                         }
                     }
                     else
