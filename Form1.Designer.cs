@@ -35,8 +35,9 @@
             this.menuItemTitle = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuItemToogleRun = new System.Windows.Forms.ToolStripMenuItem();
-            this.menuItemCloseApp = new System.Windows.Forms.ToolStripMenuItem();
             this.menuItemStartup = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemCloseApp = new System.Windows.Forms.ToolStripMenuItem();
+            this.menuItemSeeLogs = new System.Windows.Forms.ToolStripMenuItem();
             this.ctxMenuTrayIcon.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,9 +54,10 @@
             this.toolStripSeparator1,
             this.menuItemToogleRun,
             this.menuItemStartup,
+            this.menuItemSeeLogs,
             this.menuItemCloseApp});
             this.ctxMenuTrayIcon.Name = "ctxMenuTrayIcon";
-            this.ctxMenuTrayIcon.Size = new System.Drawing.Size(182, 120);
+            this.ctxMenuTrayIcon.Size = new System.Drawing.Size(182, 142);
             // 
             // menuItemTitle
             // 
@@ -76,6 +78,13 @@
             this.menuItemToogleRun.Text = "Sincronizar estado";
             this.menuItemToogleRun.Click += new System.EventHandler(this.MenuItemToogleRun_Click);
             // 
+            // menuItemStartup
+            // 
+            this.menuItemStartup.Name = "menuItemStartup";
+            this.menuItemStartup.Size = new System.Drawing.Size(181, 22);
+            this.menuItemStartup.Text = "Iniciar con Windows";
+            this.menuItemStartup.Click += new System.EventHandler(this.MenuItemStartup_Click);
+            // 
             // menuItemCloseApp
             // 
             this.menuItemCloseApp.Name = "menuItemCloseApp";
@@ -83,12 +92,12 @@
             this.menuItemCloseApp.Text = "Cerrar";
             this.menuItemCloseApp.Click += new System.EventHandler(this.MenuItemCloseApp_Click);
             // 
-            // menuItemStartup
+            // menuItemSeeLogs
             // 
-            this.menuItemStartup.Name = "menuItemStartup";
-            this.menuItemStartup.Size = new System.Drawing.Size(181, 22);
-            this.menuItemStartup.Text = "Iniciar con Windows";
-            this.menuItemStartup.Click += new System.EventHandler(this.MenuItemStartup_Click);
+            this.menuItemSeeLogs.Name = "menuItemSeeLogs";
+            this.menuItemSeeLogs.Size = new System.Drawing.Size(181, 22);
+            this.menuItemSeeLogs.Text = "Ver registros de hoy";
+            this.menuItemSeeLogs.Click += new System.EventHandler(this.MenuItemSeeLogs_Click);
             // 
             // Form1
             // 
@@ -115,6 +124,7 @@
         private System.Windows.Forms.ToolStripMenuItem menuItemTitle;
         private System.Windows.Forms.ToolStripMenuItem menuItemToogleRun;
         private System.Windows.Forms.ToolStripMenuItem menuItemStartup;
+        private System.Windows.Forms.ToolStripMenuItem menuItemSeeLogs;
     }
 }
 

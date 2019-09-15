@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,7 @@ namespace LoLCurrentSong
     public partial class Form1 : Form
     {
         private RegistryKey rkApp = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+
         public Form1()
         {
             this.SetVisibleCore(false);
@@ -66,6 +68,11 @@ namespace LoLCurrentSong
                 rkApp.SetValue(Config.AppName, Application.ExecutablePath);
             }
             menuItemStartup.Checked = rkApp.GetValue(Config.AppName) != null;
+        }
+
+        private void MenuItemSeeLogs_Click(object sender, EventArgs e)
+        {
+            Process.Start("notepad.exe", Log.Filename());
         }
     }
 }
