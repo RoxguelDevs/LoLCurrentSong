@@ -9,7 +9,7 @@ Share with your friends your favorites songs in League of Legends.
 
 ## Download App
 
-[Download portable for Windows](https://github.com/RoxguelDevs/LoLCurrentSong/releases/download/v1.0.0-alpha.2/Release-v1.0.0-alpha.2.zip)
+[Download portable for Windows](https://github.com/RoxguelDevs/LoLCurrentSong/releases/download/v1.0.0-alpha.3/Release-v1.0.0-alpha.3.zip)
 
 **Important:** You need .NET Framework 4.7.2 Runtime installed in your PC: [Download .NET Framework 4.7.2 Runtime](https://dotnet.microsoft.com/download/dotnet-framework/net472)
 
