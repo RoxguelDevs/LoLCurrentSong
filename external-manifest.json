@@ -1,0 +1,10 @@
+{
+    "name": "com.roxguel.lol_current_song",
+    "description": "LoL Current Song",
+    "path": "LoLCurrentSong.exe",
+    "type": "stdio",
+    "allowed_origins": [
+        "chrome-extension://mgojppenpepcedkponpmcmlpmjgbbgfm/",
+        "chrome-extension://fbgecinlphgenjenogfbglhpggmmdeco/"
+    ]
+}
