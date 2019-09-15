@@ -76,6 +76,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modules\ExternalProvider.cs" />
     <Compile Include="Modules\Config.cs" />
     <Compile Include="Modules\LCUProvider.cs" />
     <Compile Include="Modules\Log.cs" />
@@ -107,9 +108,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <WCFMetadata Include="Connected Services\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">

@@ -76,7 +76,7 @@ namespace LoLCurrentSong.Modules
         {
             _CurrentDirectory = Path.GetDirectoryName((typeof(Config)).Assembly.Location);
             Log.LogDir = Path.Combine(_CurrentDirectory, "log");
-            Log.LogLevel = Log.WARNING;
+            Log.LogLevel = 3; // Log.WARNING
         }
     }
 }

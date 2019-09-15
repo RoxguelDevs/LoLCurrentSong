@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using LoLCurrentSong.Modules;
 using System.Threading;
 using Newtonsoft.Json.Linq;
+using System.IO;
+using System.Text.RegularExpressions;
+using System.Linq;
 
 namespace LoLCurrentSong
 {
@@ -15,15 +17,85 @@ namespace LoLCurrentSong
         /// Punto de entrada principal para la aplicación.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Config.LoadConfig();
+            
+            if (HandlerArgs(args))
+            {
+                Log.Notice("Program CLI", "App stopping");
+                return;
+            }
+
+            if (ReadExternalConnection())
+            {
+                Log.Notice("Program CLI", "App stopping");
+                return;
+            }
+
             Log.Notice("Program", "Program is running");
             App.Start();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Form1 form = new Form1();
             Application.Run();
+        }
+
+        private static bool ReadExternalConnection()
+        {
+            Stream stdin = Console.OpenStandardInput();
+            int length = 0;
+
+            byte[] lengthBytes = new byte[4];
+            stdin.Read(lengthBytes, 0, 4);
+            length = BitConverter.ToInt32(lengthBytes, 0);
+
+            char[] buffer = new char[length];
+            using (StreamReader reader = new StreamReader(stdin))
+            {
+                while (reader.Peek() >= 0)
+                {
+                    reader.Read(buffer, 0, buffer.Length);
+                }
+            }
+
+            string message = new string(buffer);
+            if (message.Length > 0) // && message[0] == '"' && message[message.Length - 1] == '"'
+            {
+                message = message.Substring(1, message.Length - 2);
+                message = message.Replace("\\\"", "\"");
+                Log.Debug("ReadExternalConnection", message);
+            }
+
+            Regex re = new Regex("(?<=\")[^\"]*(?=\")|[^\" ]+");
+            string[] args = re.Matches(message).Cast<Match>().Select(m => m.Value).ToArray();
+            return HandlerArgs(args);
+        }
+
+        private static bool HandlerArgs(string[] args)
+        {
+            bool endApp = false;
+            if (args.Length > 0)
+            {
+                Log.Notice("Program CLI", "App started as CLI with " + args.Length + " args");
+                for (int i = 0; i < args.Length; i++)
+                {
+                    switch (args[i])
+                    {
+                        case "--set-status":
+                            i++;
+                            if (i > args.Length)
+                            {
+                                throw new Exception("New status not found");
+                            }
+                            string status = args[i];
+                            endApp = true;
+                            ExternalProvider.WriteStatusFile(status);
+                            break;
+                    }
+                }
+            }
+            return endApp;
         }
     }
 
@@ -43,6 +115,7 @@ namespace LoLCurrentSong
         public static void Start()
         {
             Log.Debug("App", "App is starting");
+            ExternalProvider.RegisterHost();
             Started = true;
             FirstTime = true;
             Waiting = false;
@@ -146,12 +219,30 @@ namespace LoLCurrentSong
 
             Log.Verborse("App", "Updating LoL status");
 
-            string song = SpotifyProvider.Song();
-
-            if (song.Length > (LIMIT_STATUS - 2))
+            string song = ExternalProvider.ReadStatusFile();
+            if (song != "")
             {
-                song = SpotifyProvider.Track();
+
+                Log.Verborse("App", "Updating LoL status with External Provider");
             }
+            else
+            {
+                song = SpotifyProvider.Song();
+                if (song != "")
+                {
+                    Log.Verborse("App", "Updating LoL status with Spotify Provider");
+                    if (song.Length > (LIMIT_STATUS - 2))
+                    {
+                        song = SpotifyProvider.Track();
+                    }
+                }
+                else
+                {
+                    Log.Verborse("App", "Spotify is close or stopped?");
+                }
+            }
+
+            
             if (song.Length > (LIMIT_STATUS - 2))
             {
                 song = song.Substring(0, LIMIT_STATUS - 3) + "…";
@@ -161,9 +252,9 @@ namespace LoLCurrentSong
                 song = song.Substring(0, LIMIT_STATUS - 2);
             }
 
-            if (song.Equals(""))
+            if (song.Equals("") || string.IsNullOrEmpty(song))
             {
-                Log.Verborse("App", "Updating LoL status with initial message. Spotify is close or stopped?");
+                Log.Verborse("App", "Empty current song, updating LoL status with initial message");
                 await lcu.StatusMessage(InitStatus);
             }
             else if (LastSong == null || !LastSong.Equals(song))
