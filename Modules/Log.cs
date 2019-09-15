@@ -6,17 +6,17 @@ namespace LoLCurrentSong.Modules
     class Log
     {
 
-        public const int VERBORSE = 0;
-        public const int DEBUG = 1;
-        public const int NOTICE = 2;
-        public const int WARNING = 3;
-        public const int ERROR = 4;
-        public const int FATAL = 5;
+        private const int VERBORSE = 0;
+        private const int DEBUG = 1;
+        private const int NOTICE = 2;
+        private const int WARNING = 3;
+        private const int ERROR = 4;
+        private const int FATAL = 5;
 
         public static string LogDir;
         public static int LogLevel = WARNING;
 
-        private static readonly string uncatchedFile = @"C:\temp\LoLCurrentSong.log";
+        // private static readonly string uncatchedFile = @"C:\temp\LoLCurrentSong.log";
 
         public static void Verborse(string module, string msg = null)
         {
@@ -89,10 +89,9 @@ namespace LoLCurrentSong.Modules
         {
             try
             {
-                string filename = String.Format("{0}.log", DateTime.Now.ToString("yyyy-MM-dd"));
-                Directory.CreateDirectory(LogDir);
+                string filename = Filename();
 
-                StreamWriter sw = File.AppendText(Path.Combine(LogDir, filename));
+                StreamWriter sw = File.AppendText(filename);
                 string text = String.Format("[{0}] {1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), msg);
                 sw.WriteLine(text, 0, text.Length);
                 sw.Close();
@@ -132,6 +131,13 @@ namespace LoLCurrentSong.Modules
             {
                 Write(String.Format("[{0}] {1}", typeText, msg));
             }
+        }
+
+        public static string Filename()
+        {
+            string filename = String.Format("{0}.log", DateTime.Now.ToString("yyyy-MM-dd"));
+            Directory.CreateDirectory(LogDir);
+            return Path.Combine(LogDir, filename);
         }
 
         private static string _TextTypeLog(int type)
